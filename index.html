@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SisDenúncia - Sistema Web de Denúncias Anônimas</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="script/script.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
+    <!-- Google Fonts -->
+    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap)" rel="stylesheet">
+    
+    <!-- Estilo Customizado (Pasta css/) -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Cabeçalho Principal -->
+    <header class="bg-police-900 text-white shadow-lg border-b-4 border-amber-500 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchPortal('citizen')">
+                <div class="bg-amber-500 text-police-900 p-2.5 rounded-lg shadow-md font-bold">
+                    <i class="fa-solid fa-shield-halved text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg sm:text-xl tracking-tight leading-none text-white">SisDenúncia</h1>
+                    <p class="text-xs text-amber-400 font-medium tracking-wide">PORTAL SEGURO & 100% ANÔNIMO</p>
+                </div>
+            </div>
+
+            <!-- Botões de Alternância de Área -->
+            <div class="flex items-center space-x-2 sm:space-x-4">
+                <button id="btn-portal-citizen" onclick="switchPortal('citizen')" class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all flex items-center space-x-2 bg-amber-500 text-police-900 shadow">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span class="hidden sm:inline">Área do</span> Cidadão
+                </button>
+                <button id="btn-portal-police" onclick="switchPortal('police')" class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white transition-all flex items-center space-x-2">
+                    <i class="fa-solid fa-building-shield"></i>
+                    <span class="hidden sm:inline">Área da</span> Delegacia
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Banner de Garantia de Anonimato -->
+    <div id="banner-anonimato" class="bg-emerald-800 text-emerald-100 py-2.5 px-4 text-xs sm:text-sm text-center font-medium shadow-inner flex items-center justify-center space-x-2">
+        <i class="fa-solid fa-lock text-emerald-300"></i>
+        <span><strong>Garantia Constitucional de Anonimato:</strong> Seu IP, dados pessoais ou localização jamais são registrados.</span>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- SEÇÃO 1: ÁREA DO CIDADÃO -->
+        <section id="portal-citizen" class="space-y-8">
+            <div class="flex border-b border-gray-300">
+                <button id="tab-citizen-new" onclick="switchCitizenTab('new')" class="py-3 px-6 text-sm font-bold border-b-2 border-police-600 text-police-600 flex items-center space-x-2 focus:outline-none">
+                    <i class="fa-solid fa-file-circle-plus"></i>
+                    <span>Fazer Nova Denúncia</span>
+                </button>
+                <button id="tab-citizen-track" onclick="switchCitizenTab('track')" class="py-3 px-6 text-sm font-bold text-gray-500 hover:text-police-600 border-b-2 border-transparent flex items-center space-x-2 focus:outline-none">
+                    <i class="fa-solid fa-magnifying-glass-location"></i>
+                    <span>Consultar Status por Protocolo</span>
+                </button>
+            </div>
+
+            <!-- Formulário de Nova Denúncia -->
+            <div id="view-citizen-new" class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-200">
+                <div class="border-b border-gray-100 pb-4 mb-6">
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-800 flex items-center space-x-2">
+                        <i class="fa-solid fa-clipboard-list text-police-600"></i>
+                        <span>Registro de Ocorrência / Denúncia Anônima</span>
+                    </h2>
+                    <p class="text-gray-500 text-sm mt-1">Preencha o máximo de informações possíveis para auxiliar no trabalho de investigação policial.</p>
+                </div>
+
+                <form id="form-denuncia" onsubmit="handleDenunciaSubmit(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Tipo de Crime / Ocorrência <span class="text-red-500">*</span></label>
+                            <select id="crime-type" required class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-police-600 outline-none bg-gray-50">
+                                <option value="">Selecione a categoria...</option>
+                                <option value="Tráfico de Drogas">Tráfico de Drogas</option>
+                                <option value="Violência Doméstica">Violência Doméstica / Familiar</option>
+                                <option value="Furto / Roubo">Furto / Roubo</option>
+                                <option value="Maus-tratos contra Animais">Maus-tratos contra Animais</option>
+                                <option value="Corrupção / Fraudes">Corrupção / Fraudes</option>
+                                <option value="Vandalismo / Danos">Vandalismo / Danos ao Patrimônio</option>
+                                <option value="Porte Ilegal de Arma">Porte Ilegal de Arma / Munição</option>
+                                <option value="Outros">Outros Tipos de Delito</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Data e Hora Aproximadas <span class="text-red-500">*</span></label>
+                            <input type="datetime-local" id="crime-date" required class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-police-600 outline-none bg-gray-50">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Endereço / Local do Fato <span class="text-red-500">*</span></label>
+                            <input type="text" id="crime-location" required placeholder="Ex: Av. Paulista, próximo ao nº 1500" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-police-600 outline-none bg-gray-50">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Bairro / Cidade <span class="text-red-500">*</span></label>
+                            <input type="text" id="crime-city" required placeholder="Ex: Centro - São Paulo/SP" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-police-600 outline-none bg-gray-50">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Descrição Detalhada dos Fatos <span class="text-red-500">*</span></label>
+                        <textarea id="crime-description" required rows="5" placeholder="Descreva os detalhes, suspeitos, veículos envolvidos, horários..." class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-police-600 outline-none bg-gray-50"></textarea>
+                    </div>
+
+                    <!-- Anexo de Provas -->
+                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-police-600 transition-colors bg-slate-50">
+                        <i class="fa-solid fa-cloud-arrow-up text-4xl text-gray-400 mb-2"></i>
+                        <h3 class="font-bold text-gray-700 text-sm">Anexar Provas ou Evidências (Opcional)</h3>
+                        <p class="text-xs text-gray-500 mb-4">Fotos, vídeos, documentos ou áudios</p>
+                        
+                        <label for="evidence-files" class="inline-flex items-center space-x-2 px-5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-semibold rounded-lg cursor-pointer transition-colors">
+                            <i class="fa-solid fa-paperclip"></i>
+                            <span>Selecionar Arquivos</span>
+                        </label>
+                        <input type="file" id="evidence-files" multiple accept="image/*,video/*,audio/*,.pdf" onchange="handleFileSelect(event)" class="hidden">
+
+                        <div id="file-preview-container" class="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4 hidden"></div>
+                    </div>
+
+                    <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 flex items-start space-x-3">
+                        <input type="checkbox" id="terms-confirm" required class="mt-1 h-4 w-4 text-police-600 focus:ring-police-500 border-gray-300 rounded">
+                        <label for="terms-confirm" class="text-xs text-amber-900 leading-relaxed">
+                            Declaro estar ciente de que prestar informações falsas às autoridades é crime (Art. 340 do Código Penal).
+                        </label>
+                    </div>
+
+                    <div class="flex justify-end pt-2">
+                        <button type="submit" id="btn-submit-denuncia" class="w-full sm:w-auto px-8 py-3.5 bg-police-600 hover:bg-police-900 text-white font-bold rounded-xl shadow-lg transition-all flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Enviar Denúncia Anônima</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Consulta por Protocolo -->
+            <div id="view-citizen-track" class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-200 hidden">
+                <div class="border-b border-gray-100 pb-4 mb-6">
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-800 flex items-center space-x-2">
+                        <i class="fa-solid fa-magnifying-glass-location text-police-600"></i>
+                        <span>Acompanhar Progresso da Denúncia</span>
+                    </h2>
+                    <p class="text-gray-500 text-sm mt-1">Informe seu número de protocolo para checar as atualizações da Polícia.</p>
+                </div>
+
+                <div class="max-w-xl mx-auto my-6">
+                    <form onsubmit="searchProtocol(event)" class="flex gap-2">
+                        <input type="text" id="input-protocol-search" required placeholder="Ex: DEN-2026-8942" class="flex-grow px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-police-600 outline-none uppercase font-mono text-lg font-bold">
+                        <button type="submit" class="px-6 py-3 bg-police-600 hover:bg-police-900 text-white font-bold rounded-xl transition-all flex items-center space-x-2">
+                            <i class="fa-solid fa-search"></i>
+                            <span>Buscar</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div id="protocol-result-box" class="hidden mt-8 max-w-3xl mx-auto border border-gray-200 rounded-xl overflow-hidden shadow-md">
+                    <div id="protocol-header" class="bg-police-900 text-white p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <span class="text-xs text-amber-400 font-semibold uppercase">Número de Protocolo</span>
+                            <h3 id="res-protocol-number" class="text-2xl font-mono font-bold">DEN-2026-0000</h3>
+                            <p id="res-protocol-date" class="text-xs text-gray-300 mt-0.5">Enviado em 00/00/0000 às 00:00</p>
+                        </div>
+                        <div id="res-status-badge" class="px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500 text-police-900 shadow">
+                            Em Análise
+                        </div>
+                    </div>
+
+                    <div class="p-6 space-y-6 bg-white">
+                        <div>
+                            <h4 class="text-xs font-bold text-gray-400 uppercase">Tipo da Ocorrência</h4>
+                            <p id="res-crime-type" class="text-base font-semibold text-gray-800">--</p>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold text-gray-400 uppercase">Local do Fato</h4>
+                            <p id="res-crime-location" class="text-sm text-gray-700">--</p>
+                        </div>
+                        <hr class="border-gray-100">
+                        <div>
+                            <h4 class="text-sm font-bold text-police-900 uppercase mb-4 flex items-center space-x-2">
+                                <i class="fa-solid fa-user-shield text-amber-600"></i>
+                                <span>Informações e Parecer da Delegacia Responsável</span>
+                            </h4>
+                            <div id="police-notes-box" class="bg-slate-50 border-l-4 border-police-600 p-4 rounded-r-lg space-y-3">
+                                <p id="res-police-text" class="text-sm text-gray-700 italic">--</p>
+                                <div class="text-xs text-gray-400 flex justify-end font-mono" id="res-police-update-time">
+                                    Última atualização: --
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="protocol-not-found" class="hidden text-center py-12">
+                    <i class="fa-solid fa-circle-xmark text-4xl text-red-500 mb-3"></i>
+                    <h3 class="text-lg font-bold text-gray-700">Protocolo Não Encontrado</h3>
+                    <p class="text-sm text-gray-500 mt-1">Verifique se o código digitado está correto.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 2: ÁREA DA DELEGACIA -->
+        <section id="portal-police" class="hidden space-y-6">
+            <div id="police-login-card" class="max-w-md mx-auto bg-white rounded-2xl shadow-xl border border-gray-200 p-8 my-12 text-center">
+                <div class="w-16 h-16 bg-police-900 text-amber-400 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h2 class="text-xl font-bold text-police-900">Acesso Restrito - Policial</h2>
+                <p class="text-xs text-gray-500 mt-1 mb-6">Área exclusiva para policiais e investigadores.</p>
+
+                <form onsubmit="handlePoliceLogin(event)" class="space-y-4">
+                    <div class="text-left">
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Matrícula / Usuário</label>
+                        <input type="text" id="police-user" required value="AGENTE-190" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-police-600 outline-none">
+                    </div>
+                    <div class="text-left">
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Senha de Acesso</label>
+                        <input type="password" id="police-pass" required value="123456" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-police-600 outline-none">
+                    </div>
+                    <button type="submit" class="w-full py-3 bg-police-900 hover:bg-police-800 text-amber-400 font-bold rounded-xl transition-all shadow">
+                        Acessar Diretório da Delegacia
+                    </button>
+                </form>
+            </div>
+
+            <!-- Painel do Policial -->
+            <div id="police-dashboard" class="hidden space-y-6">
+                <div class="bg-police-900 text-white rounded-2xl p-6 shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="px-2.5 py-1 bg-amber-500 text-police-900 text-xs font-bold rounded">1ª DELEGACIA DE POLÍCIA CIVIL</span>
+                            <span class="text-xs text-gray-300">SISTEMA INTERNO</span>
+                        </div>
+                        <h2 class="text-2xl font-bold mt-1">Diretório de Denúncias Recebidas</h2>
+                    </div>
+
+                    <button onclick="policeLogout()" class="px-4 py-2 text-xs bg-red-600/80 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors">
+                        <i class="fa-solid fa-right-from-bracket me-1"></i> Sair do Sistema
+                    </button>
+                </div>
+
+                <!-- Métricas -->
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase">Total Recebidas</p>
+                            <p id="stat-total" class="text-2xl font-bold text-gray-800">0</p>
+                        </div>
+                        <div class="text-blue-600 bg-blue-50 p-3 rounded-lg"><i class="fa-solid fa-folder-open text-xl"></i></div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase">Em Análise</p>
+                            <p id="stat-analise" class="text-2xl font-bold text-amber-600">0</p>
+                        </div>
+                        <div class="text-amber-600 bg-amber-50 p-3 rounded-lg"><i class="fa-solid fa-clock text-xl"></i></div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase">Em Investigação</p>
+                            <p id="stat-investigacao" class="text-2xl font-bold text-indigo-600">0</p>
+                        </div>
+                        <div class="text-indigo-600 bg-indigo-50 p-3 rounded-lg"><i class="fa-solid fa-magnifying-glass text-xl"></i></div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase">Concluídas</p>
+                            <p id="stat-concluidas" class="text-2xl font-bold text-emerald-600">0</p>
+                        </div>
+                        <div class="text-emerald-600 bg-emerald-50 p-3 rounded-lg"><i class="fa-solid fa-circle-check text-xl"></i></div>
+                    </div>
+                </div>
+
+                <!-- Tabela de Denúncias -->
+                <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+                    <div class="p-4 bg-slate-50 border-b border-gray-200 flex flex-col sm:flex-row justify-between gap-4">
+                        <div class="flex items-center space-x-2 flex-grow max-w-md">
+                            <i class="fa-solid fa-search text-gray-400"></i>
+                            <input type="text" id="filter-search" oninput="renderPoliceTable()" placeholder="Buscar por protocolo, bairro ou texto..." class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 outline-none">
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <select id="filter-status" onchange="renderPoliceTable()" class="px-3 py-2 text-sm rounded-lg border border-gray-300 outline-none bg-white">
+                                <option value="">Todos os Status</option>
+                                <option value="Em Análise">Em Análise</option>
+                                <option value="Em Investigação">Em Investigação</option>
+                                <option value="Encaminhado à Justiça">Encaminhado à Justiça</option>
+                                <option value="Concluída">Concluída</option>
+                                <option value="Arquivada">Arquivada</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-police-900 text-gray-200 text-xs font-bold uppercase">
+                                    <th class="p-4">Protocolo</th>
+                                    <th class="p-4">Data Envio</th>
+                                    <th class="p-4">Tipo Ocorrência</th>
+                                    <th class="p-4">Localização</th>
+                                    <th class="p-4">Status</th>
+                                    <th class="p-4 text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="police-table-body" class="divide-y divide-gray-200 text-sm">
+                                <!-- Preenchido dinamicamente pelo JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="bg-police-900 text-gray-400 py-6 text-center text-xs border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>Sistema Web de Denúncia Anônima e Acompanhamento Policial &copy; 2026</p>
+        </div>
+    </footer>
+
+    <!-- Modais -->
+    <div id="modal-success" class="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 hidden backdrop-blur-sm">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 text-center shadow-2xl space-y-5">
+            <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-4xl">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-gray-900">Denúncia Enviada com Sucesso!</h3>
+                <p class="text-xs text-gray-500 mt-1">Sua denúncia foi encaminhada para a delegacia responsável.</p>
+            </div>
+            <div class="bg-slate-100 p-4 rounded-xl border-2 border-dashed border-police-600">
+                <p class="text-xs font-bold text-gray-500 uppercase">Seu Número de Protocolo</p>
+                <div class="flex items-center justify-center space-x-2 mt-1">
+                    <span id="created-protocol-code" class="text-2xl font-mono font-extrabold text-police-900">DEN-2026-0000</span>
+                    <button onclick="copyProtocol()" class="text-police-600 hover:text-police-900 p-1.5 rounded" title="Copiar Protocolo">
+                        <i class="fa-solid fa-copy text-lg"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="pt-2 flex flex-col space-y-2">
+                <button onclick="goToTrackWithProtocol()" class="w-full py-3 bg-police-600 text-white font-bold rounded-xl">
+                    Ir para Tela de Acompanhamento
+                </button>
+                <button onclick="closeModalSuccess()" class="w-full py-2.5 text-gray-500 text-sm font-semibold">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Tratamento Policial -->
+    <div id="modal-police-detail" class="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 hidden backdrop-blur-sm">
+        <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl space-y-6">
+            <div class="flex justify-between items-start border-b border-gray-200 pb-4">
+                <div>
+                    <span class="text-xs font-mono font-bold text-police-600 uppercase">TRATAMENTO DE OCORRÊNCIA</span>
+                    <h3 id="modal-det-protocol" class="text-2xl font-mono font-bold text-police-900">DEN-2026-0000</h3>
+                    <p id="modal-det-date" class="text-xs text-gray-500">Recebido em 00/00/0000</p>
+                </div>
+                <button onclick="closePoliceModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200 text-sm">
+                <div>
+                    <span class="block text-xs font-bold text-gray-400 uppercase">Tipo do Crime</span>
+                    <span id="modal-det-type" class="font-semibold text-gray-800">--</span>
+                </div>
+                <div>
+                    <span class="block text-xs font-bold text-gray-400 uppercase">Data/Hora Estimada</span>
+                    <span id="modal-det-crimedate" class="font-semibold text-gray-800">--</span>
+                </div>
+                <div class="sm:col-span-2">
+                    <span class="block text-xs font-bold text-gray-400 uppercase">Localização / Endereço</span>
+                    <span id="modal-det-location" class="font-semibold text-gray-800">--</span>
+                </div>
+                <div class="sm:col-span-2">
+                    <span class="block text-xs font-bold text-gray-400 uppercase">Descrição dos Fatos</span>
+                    <p id="modal-det-desc" class="text-gray-700 bg-white p-3 rounded border border-gray-200 mt-1 whitespace-pre-wrap">--</p>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Anexos / Provas Enviadas</h4>
+                <div id="modal-det-evidence-list" class="flex flex-wrap gap-2"></div>
+            </div>
+
+            <hr class="border-gray-200">
+
+            <form onsubmit="savePoliceUpdate(event)" class="space-y-4 bg-amber-50/50 p-4 rounded-xl border border-amber-200">
+                <h4 class="text-sm font-bold text-police-900 uppercase flex items-center space-x-2">
+                    <i class="fa-solid fa-pen-to-square text-amber-600"></i>
+                    <span>Atualização de Status e Parecer Policial</span>
+                </h4>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Novo Status da Denúncia</label>
+                    <select id="modal-edit-status" required class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white outline-none font-semibold">
+                        <option value="Em Análise">Em Análise (Aguardando Triagem)</option>
+                        <option value="Em Investigação">Em Investigação (Inquérito Aberto)</option>
+                        <option value="Encaminhado à Justiça">Encaminhado ao Ministério Público / Justiça</option>
+                        <option value="Concluída">Concluída com Sucesso</option>
+                        <option value="Arquivada">Arquivada (Improcedente / Sem Provas)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Informações Pertinentes / Parecer da Delegacia</label>
+                    <textarea id="modal-edit-notes" rows="4" placeholder="Redija aqui as atualizações do caso ou atitudes tomadas..." class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white outline-none text-sm"></textarea>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" onclick="closePoliceModal()" class="px-5 py-2.5 text-sm font-semibold text-gray-600">Cancelar</button>
+                    <button type="submit" class="px-6 py-2.5 bg-police-900 text-amber-400 font-bold text-sm rounded-xl">Salvar e Atualizar Status</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script JavaScript Principal (Pasta js/) -->
+    <script src="js/app.js"></script>
+</body>
+</html>
