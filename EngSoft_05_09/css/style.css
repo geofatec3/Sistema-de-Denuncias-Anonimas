@@ -1,0 +1,74 @@
+/* Configuração e Temas Tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos Globais e Customizados */
+body {
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Paleta de Cores do Tema da Polícia */
+:root {
+    --color-police-50: #f0f4f8;
+    --color-police-100: #d9e2ec;
+    --color-police-600: #1e3a8a;
+    --color-police-800: #1e293b;
+    --color-police-900: #0f172a;
+}
+
+/* Utilitários Personalizados */
+.bg-police-900 {
+    background-color: var(--color-police-900);
+}
+
+.text-police-900 {
+    color: var(--color-police-900);
+}
+
+.bg-police-600 {
+    background-color: var(--color-police-600);
+}
+
+.text-police-600 {
+    color: var(--color-police-600);
+}
+
+.border-police-600 {
+    border-color: var(--color-police-600);
+}
+
+/* Animações e Transições */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.2s ease-out forwards;
+}
+
+/* Estilização da Barra de Ragem do Modal */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
