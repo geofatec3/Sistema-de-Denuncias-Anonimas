@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sistema de denúncias anônimas">
+  <title>Denúncia Segura</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">🛡️</span>
+      <div>
+        <strong>Denúncia Segura</strong>
+        <small>Canal de denúncias anônimas</small>
+      </div>
+    </div>
+    <nav>
+      <button class="nav-btn active" data-view="cidadao">Área do Cidadão</button>
+      <button class="nav-btn" data-view="delegacia">Área da Delegacia</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ÁREA DO CIDADÃO -->
+    <section id="view-cidadao" class="view active">
+      <div class="hero">
+        <div>
+          <span class="eyebrow">CANAL SEGURO</span>
+          <h1>Faça uma denúncia de forma anônima.</h1>
+          <p>Relate uma situação às autoridades sem precisar informar sua identidade. Ao finalizar, você receberá um protocolo para acompanhar o andamento.</p>
+          <div class="hero-badges">
+            <span>🔒 Sem identificação</span>
+            <span>🎫 Protocolo de acompanhamento</span>
+            <span>📋 Análise pela delegacia</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid two-columns">
+        <article class="card">
+          <div class="card-header">
+            <div>
+              <span class="eyebrow">NOVA DENÚNCIA</span>
+              <h2>Registrar denúncia</h2>
+            </div>
+            <span class="status-dot"></span>
+          </div>
+
+          <div class="notice">
+            <strong>Privacidade</strong>
+            <p>Não informe seu nome, CPF, telefone ou outros dados pessoais se deseja permanecer anônimo.</p>
+          </div>
+
+          <form id="denuncia-form">
+            <div class="field">
+              <label for="categoria">Categoria *</label>
+              <select id="categoria" required>
+                <option value="">Selecione uma categoria</option>
+                <option>Furto / Roubo</option>
+                <option>Tráfico de drogas</option>
+                <option>Violência</option>
+                <option>Corrupção</option>
+                <option>Vandalismo</option>
+                <option>Crime ambiental</option>
+                <option>Violência doméstica</option>
+                <option>Outro</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="local">Local da ocorrência *</label>
+              <input id="local" type="text" placeholder="Ex.: Rua, bairro, cidade ou ponto de referência" required>
+            </div>
+
+            <div class="field">
+              <label for="data">Data aproximada</label>
+              <input id="data" type="date">
+            </div>
+
+            <div class="field">
+              <label for="descricao">Descrição da denúncia *</label>
+              <textarea id="descricao" rows="6" maxlength="2000" placeholder="Descreva os fatos, pessoas envolvidas, horários e outras informações úteis." required></textarea>
+              <small class="counter"><span id="char-count">0</span>/2000</small>
+            </div>
+
+            <div class="field">
+              <label for="anexo">Anexo (opcional)</label>
+              <input id="anexo" type="file" accept="image/*,.pdf,.txt">
+              <small>Protótipo: o nome do arquivo será registrado localmente. Em produção, o arquivo deve ser enviado para um servidor seguro.</small>
+            </div>
+
+            <label class="check">
+              <input id="confirmacao" type="checkbox" required>
+              <span>Confirmo que as informações prestadas são verdadeiras de acordo com meu conhecimento.</span>
+            </label>
+
+            <button class="primary-btn full" type="submit">Enviar denúncia</button>
+          </form>
+        </article>
+
+        <aside class="card tracking-card">
+          <div class="card-header">
+            <div>
+              <span class="eyebrow">ACOMPANHAMENTO</span>
+              <h2>Consultar protocolo</h2>
+            </div>
+            <span class="icon-box">🔎</span>
+          </div>
+          <p class="muted">Informe o protocolo recebido após registrar sua denúncia.</p>
+          <form id="consulta-form">
+            <div class="field">
+              <label for="protocolo">Número do protocolo</label>
+              <input id="protocolo" type="text" placeholder="Ex.: DS-2026-AB12CD">
+            </div>
+            <button class="secondary-btn full" type="submit">Consultar andamento</button>
+          </form>
+          <div id="consulta-resultado" class="result-box hidden"></div>
+
+          <div class="divider"></div>
+
+          <h3>Como funciona?</h3>
+          <ol class="steps">
+            <li><span>1</span><div><strong>Você registra</strong><small>Preencha as informações da ocorrência.</small></div></li>
+            <li><span>2</span><div><strong>Recebe um protocolo</strong><small>Guarde o número em local seguro.</small></div></li>
+            <li><span>3</span><div><strong>A delegacia analisa</strong><small>O status pode ser atualizado pela equipe.</small></div></li>
+          </ol>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ÁREA DA DELEGACIA -->
+    <section id="view-delegacia" class="view">
+      <div id="login-panel" class="login-wrap">
+        <div class="login-card">
+          <div class="login-logo">🛡️</div>
+          <span class="eyebrow">ACESSO RESTRITO</span>
+          <h1>Área da Delegacia</h1>
+          <p class="muted">Entre com suas credenciais funcionais para acessar as denúncias.</p>
+
+          <form id="login-form">
+            <div class="field">
+              <label for="usuario">Usuário</label>
+              <input id="usuario" type="text" autocomplete="username" placeholder="Usuário" required>
+            </div>
+            <div class="field">
+              <label for="senha">Senha</label>
+              <input id="senha" type="password" autocomplete="current-password" placeholder="Senha" required>
+            </div>
+            <div id="login-error" class="error hidden">Usuário ou senha inválidos.</div>
+            <button class="primary-btn full" type="submit">Entrar na delegacia</button>
+          </form>
+          <small class="demo-login">Demonstração: <strong>policial</strong> / <strong>123456</strong></small>
+        </div>
+      </div>
+
+      <div id="delegacia-panel" class="hidden">
+        <div class="dashboard-head">
+          <div>
+            <span class="eyebrow">PAINEL OPERACIONAL</span>
+            <h1>Denúncias recebidas</h1>
+            <p class="muted">Analise os registros e atualize o status de cada denúncia.</p>
+          </div>
+          <button id="logout-btn" class="secondary-btn">Sair</button>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card"><span>Total</span><strong id="stat-total">0</strong></div>
+          <div class="stat-card"><span>Pendentes</span><strong id="stat-pendente">0</strong></div>
+          <div class="stat-card"><span>Em análise</span><strong id="stat-analise">0</strong></div>
+          <div class="stat-card"><span>Encaminhadas</span><strong id="stat-encaminhada">0</strong></div>
+        </div>
+
+        <div class="toolbar card">
+          <div class="field compact">
+            <label for="filtro-status">Filtrar por status</label>
+            <select id="filtro-status">
+              <option value="todos">Todos</option>
+              <option value="Pendente">Pendente</option>
+              <option value="Em análise">Em análise</option>
+              <option value="Encaminhada">Encaminhada</option>
+              <option value="Arquivada">Arquivada</option>
+            </select>
+          </div>
+          <div class="field compact grow">
+            <label for="busca">Pesquisar</label>
+            <input id="busca" type="search" placeholder="Protocolo, categoria ou local...">
+          </div>
+        </div>
+
+        <div id="denuncias-lista" class="denuncias-lista"></div>
+        <div id="empty-state" class="empty-state hidden">
+          <div>📭</div>
+          <h3>Nenhuma denúncia encontrada</h3>
+          <p>Não há registros que correspondam aos filtros selecionados.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <!-- Modal de detalhes -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-content">
+      <button class="modal-close" data-close-modal aria-label="Fechar">×</button>
+      <span class="eyebrow">DETALHES DA DENÚNCIA</span>
+      <h2 id="modal-title">Denúncia</h2>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
